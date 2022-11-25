@@ -13,6 +13,7 @@ from PyQt6.QtWidgets import (
     QLineEdit,
     QCheckBox,
     QLabel,
+    QTextEdit,
 )
 
 HOME_PATH = os.getenv("HOME")
@@ -57,6 +58,29 @@ def get_documents_and_pages(
     return sorted(documents, key=lambda x: sum(x[1].values()), reverse=True)
 
 
+def format_documents_and_pages(
+    documents_and_pages: [(str, dict)],
+    dir_path,
+    query,
+    regex,
+    case_sensitive,
+    file_types,
+) -> str:
+    output = "# meta:"
+    output += "\n\ndir_path".ljust(35) + f"{dir_path}"
+    output += "\nquery".ljust(35) + f"{query}"
+    output += "\nregex".ljust(35) + f"{regex}"
+    # TODO bug
+    output += "\ncase_sensitive".ljust(35) + f"{case_sensitive}"
+    output += "\nfile_types".ljust(35) + f'{" ".join(file_types)}'
+    output += "\n\n\n# result : [file/page: matches]"
+    for file_path, d in documents_and_pages:
+        output += f"\n\n## {file_path.lstrip(dir_path)}\n\n"
+        for k, v in d.items():
+            output += "-  " + str(k).rjust(5) + f": {v}\n"
+    return output
+
+
 class UI(QMainWindow):
     def __init__(self):
         super(UI, self).__init__()
@@ -67,7 +91,7 @@ class UI(QMainWindow):
         # menu-bar
         _translate = QtCore.QCoreApplication.translate
         self.actionExit = self.findChild(QAction, "actionExit")
-        self.actionExit.setShortcut(_translate("MainWindow", "Ctrl+X"))
+        self.actionExit.setShortcut(_translate("MainWindow", "Ctrl+Q"))
         self.actionExit.triggered.connect(
             lambda: QtCore.QCoreApplication.instance().quit()
         )
@@ -76,6 +100,8 @@ class UI(QMainWindow):
         self.pushButton_browse.clicked.connect(self.get_dir_path)
         self.pushButton_run = self.findChild(QPushButton, "pushButton_run")
         self.pushButton_run.clicked.connect(self.query)
+        self.pushButton_theme = self.findChild(QPushButton, "pushButton_theme")
+        self.pushButton_theme.clicked.connect(self.toggle_theme)
         self.lineEdit_path = self.findChild(QLineEdit, "lineEdit_path")
         self.lineEdit_query = self.findChild(QLineEdit, "lineEdit_query")
         self.checkBox_regex = self.findChild(QCheckBox, "checkBox_regex")
@@ -100,7 +126,8 @@ class UI(QMainWindow):
         self.checkBox_file_format_pptx = self.findChild(
             QCheckBox, "checkBox_file_format_pptx"
         )
-        self.label_output = self.findChild(QLabel, "label_output")
+        self.textEdit_output = self.findChild(QTextEdit, "textEdit_output")
+        self.textEdit_output.setReadOnly(True)
         # TODO config
         # view
         self.show()
@@ -115,6 +142,7 @@ class UI(QMainWindow):
         self.lineEdit_path.setText(dir_path)
 
     def query(self) -> None:
+        # TODO class for this service
         dir_path = self.lineEdit_path.text()
         query = self.lineEdit_query.text()
         regex: bool = self.checkBox_regex.isChecked()
@@ -133,11 +161,23 @@ class UI(QMainWindow):
             documents_and_pages = get_documents_and_pages(
                 dir_path, query, regex, case_sensitive, file_types
             )
-            # TODO format output
-            self.label_output.setText(str(documents_and_pages))
+            self.textEdit_output.setText(
+                format_documents_and_pages(
+                    documents_and_pages,
+                    dir_path,
+                    query,
+                    regex,
+                    case_sensitive,
+                    file_types,
+                )
+            )
             # TODO file viewer
         except FileNotFoundError:
-            self.label_output.setText("Error! Invalid directory path.")
+            # TODO generic error msg handler func
+            self.textEdit_output.setText("Error! Invalid directory path.")
+
+    def toggle_theme(self):
+        pass
 
 
 if __name__ == "__main__":
