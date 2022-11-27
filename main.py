@@ -6,8 +6,8 @@ from os import listdir
 from os.path import isfile, join
 from PyPDF2 import PdfReader
 from PyQt6 import uic, QtCore
-from PyQt6.QtCore import QFile, QTextStream
-from PyQt6.QtGui import QAction
+from PyQt6.QtCore import QFile, QTextStream, QUrl
+from PyQt6.QtGui import QAction, QDesktopServices
 from PyQt6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -21,11 +21,8 @@ from PyQt6.QtWidgets import (
 
 HOME_PATH = os.getenv("HOME")
 THEMES_PATH = os.path.join("static", "themes")
-
-# TODO generic and error handling
 THEME_DEFAULT = "Aqua"
-
-theme_current = THEME_DEFAULT
+DOCS_URL = "https://github.com/iTsluku/kdtools/blob/main/README.md"
 
 
 # TODO module
@@ -68,25 +65,13 @@ def get_documents_and_pages(
 
 
 def format_documents_and_pages(
-    documents_and_pages: [(str, dict)],
-    dir_path,
-    query,
-    regex,
-    case_sensitive,
-    file_types,
+    documents_and_pages: [(str, dict)], dir_path: str
 ) -> str:
-    output = "# meta:"
-    output += "\n\ndir_path".ljust(35) + f"{dir_path}"
-    output += "\nquery".ljust(35) + f"{query}"
-    output += "\nregex".ljust(35) + f"{regex}"
-    # TODO bug
-    output += "\ncase_sensitive".ljust(35) + f"{case_sensitive}"
-    output += "\nfile_types".ljust(35) + f'{" ".join(file_types)}'
-    output += "\n\n\n# result : [file/page: matches]"
+    output = "# result : [file/page: number of matches]"
     for file_path, d in documents_and_pages:
         output += f"\n\n## {file_path.lstrip(dir_path)}\n\n"
         for k, v in d.items():
-            output += "-  " + str(k).rjust(5) + f": {v}\n"
+            output += f"- {k}: {v}\n"
     return output
 
 
@@ -122,6 +107,10 @@ class UI(QMainWindow):
         self.actionExit.triggered.connect(
             lambda: QtCore.QCoreApplication.instance().quit()
         )
+        self.actionDocs = self.findChild(QAction, "actionDocs")
+        self.actionDocs.triggered.connect(
+            lambda: QDesktopServices.openUrl(QUrl(DOCS_URL))
+        )
         self.menuTheme = self.findChild(QMenu, "menuTheme")
         themes: [str] = get_themes()
         for theme in themes:
@@ -135,7 +124,6 @@ class UI(QMainWindow):
         self.pushButton_run = self.findChild(QPushButton, "pushButton_run")
         self.pushButton_run.clicked.connect(self.query)
         self.lineEdit_path = self.findChild(QLineEdit, "lineEdit_path")
-        self.lineEdit_query = self.findChild(QLineEdit, "lineEdit_query")
         self.checkBox_regex = self.findChild(QCheckBox, "checkBox_regex")
         self.checkBox_case_sensitive = self.findChild(
             QCheckBox, "checkBox_case_sensitive"
@@ -158,6 +146,7 @@ class UI(QMainWindow):
         self.checkBox_file_format_pptx = self.findChild(
             QCheckBox, "checkBox_file_format_pptx"
         )
+        self.textEdit_query = self.findChild(QTextEdit, "textEdit_query")
         self.textEdit_output = self.findChild(QTextEdit, "textEdit_output")
         self.textEdit_output.setReadOnly(True)
         # TODO config
@@ -176,7 +165,7 @@ class UI(QMainWindow):
     def query(self) -> None:
         # TODO class for this service
         dir_path = self.lineEdit_path.text()
-        query = self.lineEdit_query.text()
+        query = self.textEdit_query.toPlainText()
         regex: bool = self.checkBox_regex.isChecked()
         case_sensitive: bool = self.checkBox_case_sensitive.isChecked()
         # TODO file type enum
@@ -196,10 +185,6 @@ class UI(QMainWindow):
                 format_documents_and_pages(
                     documents_and_pages,
                     dir_path,
-                    query,
-                    regex,
-                    case_sensitive,
-                    file_types,
                 )
             )
             # TODO file viewer
