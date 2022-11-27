@@ -2,8 +2,11 @@ import sys
 import os
 import re
 
+from os import listdir
+from os.path import isfile, join
 from PyPDF2 import PdfReader
 from PyQt6 import uic, QtCore
+from PyQt6.QtCore import QFile, QTextStream
 from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import (
     QApplication,
@@ -12,11 +15,17 @@ from PyQt6.QtWidgets import (
     QFileDialog,
     QLineEdit,
     QCheckBox,
-    QLabel,
     QTextEdit,
+    QMenu,
 )
 
 HOME_PATH = os.getenv("HOME")
+THEMES_PATH = os.path.join("static", "themes")
+
+# TODO generic and error handling
+THEME_DEFAULT = "Aqua"
+
+theme_current = THEME_DEFAULT
 
 
 # TODO module
@@ -81,6 +90,24 @@ def format_documents_and_pages(
     return output
 
 
+def get_themes() -> [str]:
+    # TODO params --functional
+    return [
+        x.lstrip(THEMES_PATH).rstrip(".qss")
+        for x in [f for f in listdir(THEMES_PATH) if isfile(join(THEMES_PATH, f))]
+        if x.endswith(".qss")
+    ]
+
+
+def load_theme(theme: str) -> None:
+    theme_file = QFile(os.path.join(THEMES_PATH, theme + ".qss"))
+    theme_file.open(
+        QtCore.QIODevice.OpenModeFlag.ReadOnly | QtCore.QIODevice.OpenModeFlag.Text
+    )
+    theme_stream = QTextStream(theme_file)
+    app.setStyleSheet(theme_stream.readAll())
+
+
 class UI(QMainWindow):
     def __init__(self):
         super(UI, self).__init__()
@@ -95,13 +122,18 @@ class UI(QMainWindow):
         self.actionExit.triggered.connect(
             lambda: QtCore.QCoreApplication.instance().quit()
         )
+        self.menuTheme = self.findChild(QMenu, "menuTheme")
+        themes: [str] = get_themes()
+        for theme in themes:
+            action = QAction(theme, self.menuThemes)
+            action.triggered.connect(lambda chk, theme=theme: load_theme(theme))
+            self.menuThemes.addAction(action)
+
         # main-window
         self.pushButton_browse = self.findChild(QPushButton, "pushButton_browse")
         self.pushButton_browse.clicked.connect(self.get_dir_path)
         self.pushButton_run = self.findChild(QPushButton, "pushButton_run")
         self.pushButton_run.clicked.connect(self.query)
-        self.pushButton_theme = self.findChild(QPushButton, "pushButton_theme")
-        self.pushButton_theme.clicked.connect(self.toggle_theme)
         self.lineEdit_path = self.findChild(QLineEdit, "lineEdit_path")
         self.lineEdit_query = self.findChild(QLineEdit, "lineEdit_query")
         self.checkBox_regex = self.findChild(QCheckBox, "checkBox_regex")
@@ -155,7 +187,6 @@ class UI(QMainWindow):
         html: [str, bool] = (".html", self.checkBox_file_format_html.isChecked())
         pptx: [str, bool] = (".pptx", self.checkBox_file_format_pptx.isChecked())
         file_types = tuple([t[0] for t in [pdf, txt, xlsx, docx, html, pptx] if t[1]])
-        # TODO start end time filter
 
         try:
             documents_and_pages = get_documents_and_pages(
@@ -176,12 +207,16 @@ class UI(QMainWindow):
             # TODO generic error msg handler func
             self.textEdit_output.setText("Error! Invalid directory path.")
 
-    def toggle_theme(self):
-        pass
-
 
 if __name__ == "__main__":
     # init app
     app = QApplication(sys.argv)
     ui_window = UI()
+    # load default theme #TODO error handling
+    style_file = QFile(os.path.join(THEMES_PATH, THEME_DEFAULT + ".qss"))
+    style_file.open(
+        QtCore.QIODevice.OpenModeFlag.ReadOnly | QtCore.QIODevice.OpenModeFlag.Text
+    )
+    stream = QTextStream(style_file)
+    app.setStyleSheet(stream.readAll())
     app.exec()

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>798</width>
-    <height>610</height>
+    <height>639</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>&lt;PATH&gt;</string>
+     <string>/home/andreas/kdtools/test-data</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_query">
@@ -37,7 +37,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>&lt;QUERY&gt;</string>
+     <string>(?:weak|strict) correctness assumption</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_browse">
@@ -56,7 +56,7 @@
    <widget class="QCheckBox" name="checkBox_regex">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>150</x>
       <y>90</y>
       <width>85</width>
       <height>21</height>
@@ -65,11 +65,14 @@
     <property name="text">
      <string>RegEx</string>
     </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QCheckBox" name="checkBox_case_sensitive">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>150</x>
       <y>110</y>
       <width>111</width>
       <height>21</height>
@@ -82,7 +85,7 @@
    <widget class="QCheckBox" name="checkBox_file_format_pdf">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>280</x>
       <y>90</y>
       <width>85</width>
       <height>21</height>
@@ -104,7 +107,7 @@
    <widget class="QCheckBox" name="checkBox_file_format_docx">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>280</x>
       <y>110</y>
       <width>85</width>
       <height>21</height>
@@ -117,7 +120,7 @@
    <widget class="QCheckBox" name="checkBox_file_format_txt">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>370</x>
       <y>90</y>
       <width>85</width>
       <height>21</height>
@@ -130,7 +133,7 @@
    <widget class="QCheckBox" name="checkBox_file_format_html">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>370</x>
       <y>110</y>
       <width>85</width>
       <height>21</height>
@@ -143,7 +146,7 @@
    <widget class="QCheckBox" name="checkBox_file_format_xlsx">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>460</x>
       <y>90</y>
       <width>85</width>
       <height>21</height>
@@ -156,7 +159,7 @@
    <widget class="QCheckBox" name="checkBox_file_format_pptx">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>460</x>
       <y>110</y>
       <width>85</width>
       <height>21</height>
@@ -166,118 +169,13 @@
      <string>.ppt(x)</string>
     </property>
    </widget>
-   <widget class="QDateTimeEdit" name="dateTimeEdit_filter_start_time">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>150</y>
-      <width>194</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="dateTime">
-     <datetime>
-      <hour>14</hour>
-      <minute>0</minute>
-      <second>0</second>
-      <year>2022</year>
-      <month>1</month>
-      <day>1</day>
-     </datetime>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_filter_time_start">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>150</y>
-      <width>101</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Start date/time</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_filter_time_end">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>180</y>
-      <width>101</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>End date/time</string>
-    </property>
-   </widget>
-   <widget class="QDateTimeEdit" name="dateTimeEdit_filter_end_time">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>180</y>
-      <width>194</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="dateTime">
-     <datetime>
-      <hour>14</hour>
-      <minute>0</minute>
-      <second>0</second>
-      <year>2022</year>
-      <month>2</month>
-      <day>1</day>
-     </datetime>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkBox_filter_start_time">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>150</y>
-      <width>81</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Start filter</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkBox_filter_end_time">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>180</y>
-      <width>81</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>End filter</string>
-    </property>
-   </widget>
-   <widget class="Line" name="line_2">
-    <property name="geometry">
-     <rect>
-      <x>420</x>
-      <y>90</y>
-      <width>20</width>
-      <height>121</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Vertical</enum>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton_save_config">
     <property name="geometry">
      <rect>
-      <x>450</x>
+      <x>550</x>
       <y>90</y>
-      <width>121</width>
-      <height>51</height>
+      <width>111</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -287,10 +185,10 @@
    <widget class="QPushButton" name="pushButton_load_config">
     <property name="geometry">
      <rect>
-      <x>580</x>
+      <x>680</x>
       <y>90</y>
-      <width>121</width>
-      <height>51</height>
+      <width>111</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -300,10 +198,10 @@
    <widget class="QPushButton" name="pushButton_run">
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>150</y>
-      <width>121</width>
-      <height>51</height>
+      <x>10</x>
+      <y>90</y>
+      <width>111</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -314,23 +212,10 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>220</y>
-      <width>781</width>
-      <height>331</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_theme">
-    <property name="geometry">
-     <rect>
-      <x>580</x>
       <y>150</y>
-      <width>121</width>
-      <height>51</height>
+      <width>781</width>
+      <height>431</height>
      </rect>
-    </property>
-    <property name="text">
-     <string>Theme</string>
     </property>
    </widget>
   </widget>
@@ -347,22 +232,21 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionOpen_directory"/>
-    <addaction name="actionSave"/>
     <addaction name="actionExit"/>
    </widget>
-   <widget class="QMenu" name="menuEdit">
+   <widget class="QMenu" name="menuThemes">
     <property name="title">
-     <string>Edit</string>
+     <string>Themes</string>
     </property>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionDocs"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuEdit"/>
+   <addaction name="menuThemes"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -379,6 +263,11 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionDocs">
+   <property name="text">
+    <string>Docs</string>
    </property>
   </action>
  </widget>
